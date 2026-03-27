@@ -1,0 +1,4 @@
+# 仓库根目录杂项（子目录「鲲穹影音源码」内另有 .gitignore，会忽略 node_modules、dist 等）
+.DS_Store
+Thumbs.db
+desktop.ini

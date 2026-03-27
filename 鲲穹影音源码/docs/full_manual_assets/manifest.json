@@ -1,0 +1,162 @@
+{
+  "project_title": "鲲穹影音（鲲穹AI播放器3）",
+  "manual_subtitle": "使用说明",
+  "manual_title": "鲲穹影音（鲲穹AI播放器3）使用说明",
+  "base_url": "http://127.0.0.1:3200",
+  "toc": [
+    {
+      "title": "1. 简介",
+      "page": 3,
+      "sub": [
+        { "title": "(1) 目的", "page": 3 },
+        { "title": "(2) 环境", "page": 3 }
+      ]
+    },
+    {
+      "title": "2. 功能说明",
+      "page": 4,
+      "sub": [
+        { "title": "(1) 入门与打开", "page": 4 },
+        { "title": "(2) 播放与控制", "page": 6 },
+        { "title": "(3) 显示与字幕", "page": 10 },
+        { "title": "(4) 设置与账号", "page": 12 }
+      ]
+    }
+  ],
+  "intro": {
+    "title": "1. 简介",
+    "purpose": "本文档用于说明“鲲穹影音（鲲穹AI播放器3）”的基础使用方式与常用功能入口，面向普通用户与交付验收人员。",
+    "env_title": "2. 环境",
+    "env_text": "操作系统：Windows 10/11（推荐 64 位）。运行环境：桌面端 Electron 应用。建议分辨率：1366×768 及以上。支持常见视频格式（如 mp4/mkv/avi/mov 等）。",
+    "quick_title": "3. 快速开始",
+    "quick_steps": [
+      "启动应用后，点击欢迎页“打开文件”，或在菜单栏「文件」中选择“打开文件/文件夹/URL”。",
+      "播放时可使用底部控制栏进行播放/暂停、进度拖动、音量、倍速、全屏等操作。",
+      "需要更多功能时，点击右上或菜单入口打开：播放列表、字幕、设置等面板。"
+    ],
+    "overview_caption": "主界面概览",
+    "overview_screenshot": "overview-home.png"
+  },
+  "items": [
+    {
+      "category": "入门与打开",
+      "title": "打开 URL 播放",
+      "url": "#urlDialog",
+      "screenshot": "01-open-url.png",
+      "description": "通过 URL 打开在线视频/直链进行播放。",
+      "steps": [
+        "点击菜单栏「文件」→「打开URL…」（或使用快捷键 Ctrl+U）。",
+        "在弹出的 URL 输入框中粘贴视频地址。",
+        "确认后开始加载并播放。"
+      ]
+    },
+    {
+      "category": "入门与打开",
+      "title": "欢迎页快速打开文件",
+      "url": "#welcomeScreen",
+      "screenshot": "02-welcome-open-file.png",
+      "description": "从欢迎页一键打开本地文件开始播放。",
+      "steps": [
+        "启动后在欢迎页点击「打开文件」。",
+        "选择本地视频文件并确认。",
+        "播放器开始加载并进入播放界面。"
+      ]
+    },
+    {
+      "category": "播放与控制",
+      "title": "播放控制与进度条",
+      "url": "#controlBar",
+      "screenshot": "03-playback-controls.png",
+      "description": "常用播放操作：播放/暂停、停止、上一首/下一首、进度拖动、音量等。",
+      "steps": [
+        "底部控制栏点击「播放/暂停」或按 Space 快捷键。",
+        "拖动进度条可快进/快退到指定位置。",
+        "使用音量按钮与滑块调整音量。"
+      ]
+    },
+    {
+      "category": "播放与控制",
+      "title": "播放列表（批量加入与切换）",
+      "url": "#playlistPanel",
+      "screenshot": "04-playlist.png",
+      "description": "管理待播视频列表，支持添加文件、清空列表、切换播放模式。",
+      "steps": [
+        "点击底部控制栏「播放列表」。",
+        "在列表面板中选择「添加文件」加入多个视频。",
+        "双击列表项即可切换播放。"
+      ]
+    },
+    {
+      "category": "播放与控制",
+      "title": "倍速播放",
+      "url": "#speedMenu",
+      "screenshot": "05-speed.png",
+      "description": "按需要切换播放速度（如 0.5×/1×/1.25×/1.5×/2× 等）。",
+      "steps": [
+        "点击底部控制栏「倍速」。",
+        "在弹出的倍速菜单中选择目标速度。",
+        "播放将按所选倍速进行。"
+      ]
+    },
+    {
+      "category": "播放与控制",
+      "title": "视频截图",
+      "url": "#screenshot",
+      "screenshot": "06-screenshot.png",
+      "description": "一键截取当前画面并保存到本地（具体保存位置以应用提示为准）。",
+      "steps": [
+        "播放过程中点击底部控制栏「截图」。",
+        "等待保存完成提示。",
+        "在本地文件夹中查看截图文件。"
+      ]
+    },
+    {
+      "category": "显示与字幕",
+      "title": "画中画（PIP）",
+      "url": "#pip",
+      "screenshot": "07-pip.png",
+      "description": "将视频以小窗形式置顶显示，便于边看边做其它操作（部分系统/驱动环境可能限制）。",
+      "steps": [
+        "点击底部控制栏「画中画」。",
+        "在弹出的小窗中继续观看视频。",
+        "再次点击「画中画」可退出。"
+      ]
+    },
+    {
+      "category": "显示与字幕",
+      "title": "字幕面板与样式/同步",
+      "url": "#subtitleSettingsPanel",
+      "screenshot": "08-subtitle.png",
+      "description": "选择字幕轨道、加载字幕文件，并调整字体、大小、颜色、同步延迟与位置等。",
+      "steps": [
+        "点击顶部菜单按钮「字幕」。",
+        "在字幕面板选择字幕轨道或加载字幕文件。",
+        "通过“同步/样式/位置”区域进行个性化调整。"
+      ]
+    },
+    {
+      "category": "设置与账号",
+      "title": "设置面板（常用偏好）",
+      "url": "#settingsPanel",
+      "screenshot": "09-settings.png",
+      "description": "打开设置面板，配置播放、显示、快捷键等偏好，并支持应用/取消。",
+      "steps": [
+        "点击顶部菜单按钮「设置」。",
+        "在设置面板中修改所需选项。",
+        "点击「应用/确定」保存设置，或点「取消」放弃更改。"
+      ]
+    },
+    {
+      "category": "设置与账号",
+      "title": "登录与账号面板",
+      "url": "#userPanel",
+      "screenshot": "10-login.png",
+      "description": "点击头像区域打开账号面板，进行登录/退出登录，查看令牌等信息。",
+      "steps": [
+        "点击右上角用户区域打开账号面板。",
+        "点击「立即登录」按提示完成登录。",
+        "登录后可在面板中查看账号状态与令牌信息。"
+      ]
+    }
+  ]
+}

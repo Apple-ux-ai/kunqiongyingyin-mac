@@ -1,0 +1,37 @@
+Windows Registry Editor Version 5.00
+
+; --- 鲲穹影音 注册表手动修复脚本 ---
+; 解决安装后在“默认应用”候选项中找不到程序的问题
+
+; 1. 注册程序 ProgID
+[HKEY_CURRENT_USER\Software\Classes\com.kunqiong.aiplayer]
+@="鲲穹影音 视频文件"
+"AppUserModelID"="com.kunqiong.aiplayer"
+
+[HKEY_CURRENT_USER\Software\Classes\com.kunqiong.aiplayer\DefaultIcon]
+@="\"%LocalAppData%\\Programs\\kunqiong-ai-player\\鲲穹影音.exe\",0"
+
+[HKEY_CURRENT_USER\Software\Classes\com.kunqiong.aiplayer\shell\open\command]
+@="\"%LocalAppData%\\Programs\\kunqiong-ai-player\\鲲穹影音.exe\" \"%1\""
+
+; 2. 注册应用程序功能 (Capabilities) - 这是显示在默认应用列表的关键
+[HKEY_CURRENT_USER\Software\鲲穹影音\Capabilities]
+"ApplicationDescription"="鲲穹影音 - 智能视频播放器"
+"ApplicationName"="鲲穹影音"
+"ApplicationIcon"="\"%LocalAppData%\\Programs\\kunqiong-ai-player\\鲲穹影音.exe\",0"
+
+[HKEY_CURRENT_USER\Software\鲲穹影音\Capabilities\FileAssociations]
+".mp4"="com.kunqiong.aiplayer"
+".mkv"="com.kunqiong.aiplayer"
+".avi"="com.kunqiong.aiplayer"
+".mov"="com.kunqiong.aiplayer"
+".flv"="com.kunqiong.aiplayer"
+".wmv"="com.kunqiong.aiplayer"
+".rmvb"="com.kunqiong.aiplayer"
+".webm"="com.kunqiong.aiplayer"
+".ts"="com.kunqiong.aiplayer"
+".3gp"="com.kunqiong.aiplayer"
+
+; 3. 将程序添加到已注册应用程序列表
+[HKEY_CURRENT_USER\Software\RegisteredApplications]
+"鲲穹影音"="Software\\鲲穹影音\\Capabilities"

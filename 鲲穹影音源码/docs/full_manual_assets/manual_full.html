@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>鲲穹影音（鲲穹AI播放器3）使用说明</title>
+  <style>
+    html, body { margin: 0; padding: 0; background: #fff; color: #222; font-family: SimSun, "Songti SC", "宋体", serif; }
+    .page { width: 595.3pt; height: 841.9pt; margin: 0 auto; position: relative; page-break-after: always; overflow: hidden; background: #fff; }
+    .page:last-child { page-break-after: auto; }
+    .inner { position: absolute; left: 90pt; right: 90pt; top: 74pt; }
+    .cover-title { position: absolute; left: 0; right: 0; top: 322pt; text-align: center; font-size: 38px; line-height: 1.55; font-weight: 400; }
+    .toc-title { text-align: center; font-size: 30px; line-height: 1.3; margin: 0 0 14pt; font-weight: 400; }
+    .toc-list { margin-top: 8pt; }
+    .toc-item { display: flex; align-items: flex-end; font-size: 24px; line-height: 1.8; margin: 0; }
+    .toc-item.sub { padding-left: 28pt; font-size: 21px; line-height: 1.75; }
+    .toc-item .name { white-space: nowrap; margin-right: 8pt; }
+    .toc-item .leader { flex: 1; border-bottom: 3px dotted #111; margin: 0 8pt 7pt 0; min-width: 20pt; }
+    .toc-item .page-num { width: 18pt; text-align: right; white-space: nowrap; }
+    h2.section-title { margin: 0 0 10pt; font-size: 30px; line-height: 1.35; font-weight: 600; }
+    h3.func-title { margin: 0 0 10pt; font-size: 24px; line-height: 1.35; font-weight: 600; }
+    p.lead { margin: 0 0 10pt; font-size: 18px; line-height: 1.9; }
+    p.desc { margin: 0 0 8pt; font-size: 18px; line-height: 1.8; }
+    ol.steps { margin: 0 0 10pt 22pt; padding: 0; font-size: 17px; line-height: 1.75; }
+    .shot { width: 415pt; max-height: 470pt; object-fit: contain; border: none; display: block; margin-top: 8pt; }
+    .shot.placeholder {
+      border: 1px dashed #888;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+      font-size: 14px;
+      min-height: 260pt;
+      padding: 10pt;
+      text-align: center;
+      box-sizing: border-box;
+    }
+    .page-no { position: absolute; bottom: 28pt; left: 0; right: 0; text-align: center; font-size: 14px; color: #444; }
+    .split { height: 1px; background: #444; margin: 14pt 0; opacity: 0.35; }
+  </style>
+</head>
+<body>
+  <section class="page">
+    <div class="cover-title">
+      <div>鲲穹影音（鲲穹AI播放器3）</div>
+      <div>使用说明</div>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      <h2 class="toc-title">目录</h2>
+      <div class="toc-list">
+        <p class="toc-item"><span class="name">1. 简介</span><span class="leader"></span><span class="page-num">3</span></p>
+        <p class="toc-item sub"><span class="name">(1) 目的</span><span class="leader"></span><span class="page-num">3</span></p>
+        <p class="toc-item sub"><span class="name">(2) 环境</span><span class="leader"></span><span class="page-num">3</span></p>
+        <p class="toc-item"><span class="name">2. 功能说明</span><span class="leader"></span><span class="page-num">4</span></p>
+        <p class="toc-item sub"><span class="name">(1) 入门与打开</span><span class="leader"></span><span class="page-num">4</span></p>
+        <p class="toc-item sub"><span class="name">(2) 播放与控制</span><span class="leader"></span><span class="page-num">6</span></p>
+        <p class="toc-item sub"><span class="name">(3) 显示与字幕</span><span class="leader"></span><span class="page-num">10</span></p>
+        <p class="toc-item sub"><span class="name">(4) 设置与账号</span><span class="leader"></span><span class="page-num">12</span></p>
+      </div>
+    </div>
+    <div class="page-no">第 2 页</div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      <h2 class="section-title">1. 简介</h2>
+      <p class="lead">本文档用于说明“鲲穹影音（鲲穹AI播放器3）”的基础使用方式与常用功能入口，面向普通用户与交付验收人员。</p>
+
+      <h2 class="section-title" style="font-size: 26px;">2. 环境</h2>
+      <p class="lead">操作系统：Windows 10/11（推荐 64 位）。运行环境：桌面端 Electron 应用。建议分辨率：1366×768 及以上。支持常见视频格式（如 mp4/mkv/avi/mov 等）。</p>
+
+      <h2 class="section-title" style="font-size: 26px;">3. 快速开始</h2>
+      <ol class="steps">
+        <li>启动应用后，点击欢迎页“打开文件”，或在菜单栏「文件」中选择“打开文件/文件夹/URL”。</li><li>播放时可使用底部控制栏进行播放/暂停、进度拖动、音量、倍速、全屏等操作。</li><li>需要更多功能时，点击右上或菜单入口打开：播放列表、字幕、设置等面板。</li>
+      </ol>
+
+      <div class="split"></div>
+      <p class="desc">主界面概览</p>
+      <img class="shot" src="./screenshots/overview-home.png" alt="overview" />
+    </div>
+    <div class="page-no">第 3 页</div>
+  </section>
+
+
+  <section class="page">
+    <div class="inner">
+      <h2 class="section-title">四、操作说明</h2>
+      <h3 class="func-title">（1）【入门与打开】打开 URL 播放</h3>
+      <p class="desc">通过 URL 打开在线视频/直链进行播放。</p>
+      <ol class="steps">
+        <li>点击菜单栏「文件」→「打开URL…」（或使用快捷键 Ctrl+U）。</li><li>在弹出的 URL 输入框中粘贴视频地址。</li><li>确认后开始加载并播放。</li>
+      </ol>
+      <img class="shot" src="./screenshots/01-open-url.png" alt="入门与打开-打开 URL 播放" />
+    </div>
+    <div class="page-no">第 4 页</div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      
+      <h3 class="func-title">（2）【入门与打开】欢迎页快速打开文件</h3>
+      <p class="desc">从欢迎页一键打开本地文件开始播放。</p>
+      <ol class="steps">
+        <li>启动后在欢迎页点击「打开文件」。</li><li>选择本地视频文件并确认。</li><li>播放器开始加载并进入播放界面。</li>
+      </ol>
+      <img class="shot" src="./screenshots/02-welcome-open-file.png" alt="入门与打开-欢迎页快速打开文件" />
+    </div>
+    <div class="page-no">第 5 页</div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      
+      <h3 class="func-title">（3）【播放与控制】播放控制与进度条</h3>
+      <p class="desc">常用播放操作：播放/暂停、停止、上一首/下一首、进度拖动、音量等。</p>
+      <ol class="steps">
+        <li>底部控制栏点击「播放/暂停」或按 Space 快捷键。</li><li>拖动进度条可快进/快退到指定位置。</li><li>使用音量按钮与滑块调整音量。</li>
+      </ol>
+      <img class="shot" src="./screenshots/03-playback-controls.png" alt="播放与控制-播放控制与进度条" />
+    </div>
+    <div class="page-no">第 6 页</div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      
+      <h3 class="func-title">（4）【播放与控制】播放列表（批量加入与切换）</h3>
+      <p class="desc">管理待播视频列表，支持添加文件、清空列表、切换播放模式。</p>
+      <ol class="steps">
+        <li>点击底部控制栏「播放列表」。</li><li>在列表面板中选择「添加文件」加入多个视频。</li><li>双击列表项即可切换播放。</li>
+      </ol>
+      <img class="shot" src="./screenshots/04-playlist.png" alt="播放与控制-播放列表（批量加入与切换）" />
+    </div>
+    <div class="page-no">第 7 页</div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      
+      <h3 class="func-title">（5）【播放与控制】倍速播放</h3>
+      <p class="desc">按需要切换播放速度（如 0.5×/1×/1.25×/1.5×/2× 等）。</p>
+      <ol class="steps">
+        <li>点击底部控制栏「倍速」。</li><li>在弹出的倍速菜单中选择目标速度。</li><li>播放将按所选倍速进行。</li>
+      </ol>
+      <img class="shot" src="./screenshots/05-speed.png" alt="播放与控制-倍速播放" />
+    </div>
+    <div class="page-no">第 8 页</div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      
+      <h3 class="func-title">（6）【播放与控制】视频截图</h3>
+      <p class="desc">一键截取当前画面并保存到本地（具体保存位置以应用提示为准）。</p>
+      <ol class="steps">
+        <li>播放过程中点击底部控制栏「截图」。</li><li>等待保存完成提示。</li><li>在本地文件夹中查看截图文件。</li>
+      </ol>
+      <img class="shot" src="./screenshots/06-screenshot.png" alt="播放与控制-视频截图" />
+    </div>
+    <div class="page-no">第 9 页</div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      
+      <h3 class="func-title">（7）【显示与字幕】画中画（PIP）</h3>
+      <p class="desc">将视频以小窗形式置顶显示，便于边看边做其它操作（部分系统/驱动环境可能限制）。</p>
+      <ol class="steps">
+        <li>点击底部控制栏「画中画」。</li><li>在弹出的小窗中继续观看视频。</li><li>再次点击「画中画」可退出。</li>
+      </ol>
+      <img class="shot" src="./screenshots/07-pip.png" alt="显示与字幕-画中画（PIP）" />
+    </div>
+    <div class="page-no">第 10 页</div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      
+      <h3 class="func-title">（8）【显示与字幕】字幕面板与样式/同步</h3>
+      <p class="desc">选择字幕轨道、加载字幕文件，并调整字体、大小、颜色、同步延迟与位置等。</p>
+      <ol class="steps">
+        <li>点击顶部菜单按钮「字幕」。</li><li>在字幕面板选择字幕轨道或加载字幕文件。</li><li>通过“同步/样式/位置”区域进行个性化调整。</li>
+      </ol>
+      <img class="shot" src="./screenshots/08-subtitle.png" alt="显示与字幕-字幕面板与样式/同步" />
+    </div>
+    <div class="page-no">第 11 页</div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      
+      <h3 class="func-title">（9）【设置与账号】设置面板（常用偏好）</h3>
+      <p class="desc">打开设置面板，配置播放、显示、快捷键等偏好，并支持应用/取消。</p>
+      <ol class="steps">
+        <li>点击顶部菜单按钮「设置」。</li><li>在设置面板中修改所需选项。</li><li>点击「应用/确定」保存设置，或点「取消」放弃更改。</li>
+      </ol>
+      <img class="shot" src="./screenshots/09-settings.png" alt="设置与账号-设置面板（常用偏好）" />
+    </div>
+    <div class="page-no">第 12 页</div>
+  </section>
+
+  <section class="page">
+    <div class="inner">
+      
+      <h3 class="func-title">（10）【设置与账号】登录与账号面板</h3>
+      <p class="desc">点击头像区域打开账号面板，进行登录/退出登录，查看令牌等信息。</p>
+      <ol class="steps">
+        <li>点击右上角用户区域打开账号面板。</li><li>点击「立即登录」按提示完成登录。</li><li>登录后可在面板中查看账号状态与令牌信息。</li>
+      </ol>
+      <img class="shot" src="./screenshots/10-login.png" alt="设置与账号-登录与账号面板" />
+    </div>
+    <div class="page-no">第 13 页</div>
+  </section>
+</body>
+</html>

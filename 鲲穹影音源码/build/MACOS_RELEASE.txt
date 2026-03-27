@@ -1,0 +1,29 @@
+macOS 发布检查（需在 macOS 上执行构建与签名）
+
+1. 构建产物说明
+   - 便携版（解压即用 .app）：npm run build-mac-portable   → dist 内 .zip
+   - 安装镜像（拖拽安装）：     npm run build-mac-dmg       → dist 内 .dmg
+   - 系统安装包：               npm run build-mac-pkg       → dist 内 .pkg
+   - 一次打全：                 npm run build-mac-release   → .dmg + .zip + .pkg
+
+2. 在本地 Mac 上构建
+   npm run build-mac-release
+
+3. 在 Windows 上无法打出 macOS 便携版，请使用 .github/workflows/build-macos.yml：
+   推送到 GitHub → Actions → 手动运行「macOS 便携版 ZIP」→ 下载 Artifact（仅含 .zip）。
+
+4. npm run build-mac-universal 与 build-mac-release 相同，均按 package.json 打出 dmg + zip + pkg
+
+5. 代码签名（Apple Developer ID Application）
+   设置环境变量 CSC_LINK（.p12 路径或证书名）、CSC_KEY_PASSWORD，或使用钥匙串中的身份。
+
+6. 公证（Notary）
+   设置 APPLE_ID、APPLE_APP_SPECIFIC_PASSWORD、APPLE_TEAM_ID 等后，可配合 electron-builder notarize 或手动 xcrun notarytool。
+
+7. 回归
+   - Intel 与 Apple Silicon 各测一套通用包（或分别打 x64 / arm64 包）
+   - 双击关联视频文件应触发播放（open-file）
+   - 转码 / 截图路径使用系统「图片」目录
+
+8. 自动更新
+   当前 macOS 在发现新版本时会在浏览器中打开 download_url；若需静默更新，请在更新服务器提供 latest-mac.yml 并接入 electron-updater。

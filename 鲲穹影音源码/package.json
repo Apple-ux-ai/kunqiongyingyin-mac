@@ -1,0 +1,199 @@
+{
+  "name": "kunqiong-ai-player",
+  "version": "1.1.1",
+  "description": "鲲穹影音 - 功能强大的智能视频播放器 (Ultimate Icon Edition)",
+  "main": "main.js",
+  "appId": "com.kq.player.v113.ultimate",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build-win": "electron-builder --win --x64",
+    "build-win-portable": "electron-builder --win portable --x64",
+    "build-mac": "electron-builder --mac",
+    "build-mac-universal": "electron-builder --mac --universal",
+    "build-mac-portable": "electron-builder --mac zip --universal",
+    "build-mac-dmg": "electron-builder --mac dmg --universal",
+    "build-mac-pkg": "electron-builder --mac pkg --universal",
+    "build-mac-release": "electron-builder --mac --universal",
+    "build:dir": "electron-builder --win --dir",
+    "build:portable": "electron-builder --win --dir -c.directories.output=dist-to-sign",
+    "build:installer": "electron-builder --win nsis --prepackaged dist-to-sign/win-unpacked -c.directories.output=dist-final",
+    "build:unsigned": "electron-builder --win nsis -c.directories.output=dist-unsigned",
+    "build:step1-unpack": "electron-builder --win --dir -c.directories.output=dist-pending-sign",
+    "build:step2-pack": "electron-builder --win nsis --prepackaged dist-pending-sign/win-unpacked -c.directories.output=dist-signed-release",
+    "pack": "npm run build-win"
+  },
+  "author": "KunQiong AI",
+  "license": "MIT",
+  "optionalDependencies": {
+    "@ffmpeg-installer/darwin-arm64": "4.1.5",
+    "@ffmpeg-installer/darwin-x64": "4.1.0",
+    "@ffprobe-installer/darwin-arm64": "5.0.1",
+    "@ffprobe-installer/darwin-x64": "5.1.0"
+  },
+  "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@ffprobe-installer/ffprobe": "^2.1.2",
+    "electron-updater": "^6.7.3",
+    "fluent-ffmpeg": "^2.1.2",
+    "i18next": "^25.8.0"
+  },
+  "devDependencies": {
+    "electron": "^28.3.3",
+    "electron-builder": "^24.9.1",
+    "playwright": "^1.58.2"
+  },
+  "build": {
+    "appId": "com.kq.player.v113.ultimate",
+    "productName": "鲲穹影音",
+    "afterPack": "./build/after-pack.js",
+    "directories": {
+      "output": "dist",
+      "buildResources": "."
+    },
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "https://api-web.kunqiongai.com/update/"
+      }
+    ],
+    "compression": "store",
+    "mac": {
+      "category": "public.app-category.entertainment",
+      "artifactName": "${productName}-${version}-mac-universal.${ext}",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "universal"
+          ]
+        },
+        {
+          "target": "pkg",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "icon": "kq-ai-v113-final.png",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
+    },
+    "dmg": {
+      "title": "鲲穹影音 ${version}",
+      "artifactName": "${productName}-${version}-mac-universal.dmg"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "dir",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "kq-ai-v113-final.ico",
+      "publisherName": "KunQiong AI",
+      "appId": "com.kq.player.v113.ultimate",
+      "legalTrademarks": "KunQiong AI",
+      "extraResources": [
+        {
+          "from": "node_modules/@ffmpeg-installer/win32-x64/ffmpeg.exe",
+          "to": "ffmpeg/ffmpeg.exe"
+        },
+        {
+          "from": "node_modules/@ffprobe-installer/win32-x64/ffprobe.exe",
+          "to": "ffmpeg/ffprobe.exe"
+        },
+        {
+          "from": "bin/updater.exe",
+          "to": "updater.exe"
+        }
+      ]
+    },
+    "protocols": [
+      {
+        "name": "KunQiong Player Protocol",
+        "schemes": [
+          "kunqiong-player"
+        ]
+      }
+    ],
+    "fileAssociations": [
+      {
+        "ext": [
+          "mp4",
+          "mkv",
+          "avi",
+          "mov",
+          "flv",
+          "wmv",
+          "rmvb",
+          "webm",
+          "ts",
+          "3gp"
+        ],
+        "name": "Video File",
+        "description": "Video File",
+        "role": "Viewer",
+        "icon": "kq-ai-v113-final.ico"
+      }
+    ],
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "鲲穹影音",
+      "installerIcon": "kq-ai-v113-final.ico",
+      "uninstallerIcon": "kq-ai-v113-final.ico",
+      "installerHeaderIcon": "kq-ai-v113-final.ico",
+      "runAfterFinish": true,
+      "include": "installer.nsh"
+    },
+    "files": [
+      "**/*",
+      "!node_modules/@ffmpeg-installer/win32-x64/ffmpeg.exe",
+      "!node_modules/@ffprobe-installer/win32-x64/ffprobe.exe",
+      "!node_modules/@ffmpeg-installer/darwin-x64/**",
+      "!node_modules/@ffmpeg-installer/darwin-arm64/**",
+      "!node_modules/@ffmpeg-installer/linux-*/**",
+      "!node_modules/@ffmpeg-installer/freebsd-*/**",
+      "!node_modules/@ffprobe-installer/darwin-x64/**",
+      "!node_modules/@ffprobe-installer/darwin-arm64/**",
+      "!node_modules/@ffprobe-installer/linux-*/**",
+      "!node_modules/@ffprobe-installer/freebsd-*/**",
+      "!logs/**/*",
+      "!*.log",
+      "!*.md",
+      "!dist*/**/*",
+      "!test-videos/**/*",
+      "!*.zip",
+      "!*.bak.js"
+    ],
+    "asar": true,
+    "electronLanguages": [
+      "zh-CN"
+    ]
+  }
+}
