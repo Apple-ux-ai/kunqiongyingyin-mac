@@ -1,4 +1,6 @@
-# macOS 便携版：仅打 ZIP（内含 .app）。在 GitHub macOS runner 上执行。
+# macOS 便携版 ZIP（GitHub Actions）
+# 说明：云端 runner 为 Apple Silicon，universal 会缺 darwin-x64 FFmpeg 导致失败；
+#       此处仅打 arm64 ZIP，适用于 M 系列 Mac；Intel Mac 需在本地或其它环境打 universal。
 name: macOS 便携版 ZIP
 
 on:
@@ -12,7 +14,6 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v4
 
-      # 兼容两种常见目录：整盘推送为「鲲穹影音源码」，或误套一层与仓库同名文件夹
       - name: 解析源码目录（含 package.json）
         id: appdir
         shell: bash
@@ -23,8 +24,11 @@ jobs:
           elif [ -f "kunqiongyingyin-mac/package.json" ]; then
             echo "dir=kunqiongyingyin-mac" >> "$GITHUB_OUTPUT"
             echo "使用目录: kunqiongyingyin-mac"
+          elif [ -f "package.json" ] && grep -q '"electron"' package.json 2>/dev/null; then
+            echo "dir=." >> "$GITHUB_OUTPUT"
+            echo "使用目录: 仓库根目录"
           else
-            echo "::error::未找到 package.json。仓库根目录内容："
+            echo "::error::未找到 package.json。根目录："
             ls -la
             exit 1
           fi
@@ -33,8 +37,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: npm
-          cache-dependency-path: ${{ steps.appdir.outputs.dir }}/package-lock.json
+
+      - name: 确保存在 mac 图标（未提交时占位）
+        working-directory: ${{ steps.appdir.outputs.dir }}
+        shell: bash
+        run: |
+          if [ ! -f kq-ai-v113-final.png ]; then
+            echo "::warning::缺少 kq-ai-v113-final.png，写入 1x1 占位图"
+            python3 -c "import base64,pathlib; pathlib.Path('kq-ai-v113-final.png').write_bytes(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='))"
+          fi
 
       - name: 安装依赖
         working-directory: ${{ steps.appdir.outputs.dir }}
@@ -47,15 +58,20 @@ jobs:
             npm install
           fi
 
-      - name: 仅打包便携版（ZIP，通用 arm64+x64）
+      - name: 打包 ZIP（arm64，未签名）
         working-directory: ${{ steps.appdir.outputs.dir }}
-        run: npm run build-mac-portable
+        shell: bash
+        run: |
+          npx electron-builder --mac zip --arm64 \
+            -c.mac.identity=null \
+            -c.mac.hardenedRuntime=false \
+            '-c.mac.artifactName=${productName}-${version}-mac-arm64.${ext}'
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
 
       - name: 上传 ZIP
         uses: actions/upload-artifact@v4
         with:
-          name: kunqiong-mac-portable-zip
+          name: kunqiong-mac-portable-arm64
           path: ${{ steps.appdir.outputs.dir }}/dist/*.zip
           if-no-files-found: error

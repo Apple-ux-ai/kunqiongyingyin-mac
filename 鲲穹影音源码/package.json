@@ -12,6 +12,7 @@
     "build-mac": "electron-builder --mac",
     "build-mac-universal": "electron-builder --mac --universal",
     "build-mac-portable": "electron-builder --mac zip --universal",
+    "build-mac-portable-ci": "electron-builder --mac zip --arm64 -c.mac.identity=null -c.mac.hardenedRuntime=false",
     "build-mac-dmg": "electron-builder --mac dmg --universal",
     "build-mac-pkg": "electron-builder --mac pkg --universal",
     "build-mac-release": "electron-builder --mac --universal",
