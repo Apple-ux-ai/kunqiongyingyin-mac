@@ -1,5 +1,4 @@
-# macOS 便携版：仅打 ZIP（内含 .app，解压后双击即用）。必须在 macOS 上构建，故用云端 runner。
-# 本机 Windows 无法执行 electron-builder --mac，请推送到 GitHub → Actions → 手动运行本工作流 → 下载 Artifact。
+# macOS 便携版：仅打 ZIP（内含 .app）。在 GitHub macOS runner 上执行。
 name: macOS 便携版 ZIP
 
 on:
@@ -8,25 +7,48 @@ on:
 jobs:
   build:
     runs-on: macos-latest
-    defaults:
-      run:
-        working-directory: 鲲穹影音源码
 
     steps:
       - name: 检出代码
         uses: actions/checkout@v4
+
+      # 兼容两种常见目录：整盘推送为「鲲穹影音源码」，或误套一层与仓库同名文件夹
+      - name: 解析源码目录（含 package.json）
+        id: appdir
+        shell: bash
+        run: |
+          if [ -f "鲲穹影音源码/package.json" ]; then
+            echo "dir=鲲穹影音源码" >> "$GITHUB_OUTPUT"
+            echo "使用目录: 鲲穹影音源码"
+          elif [ -f "kunqiongyingyin-mac/package.json" ]; then
+            echo "dir=kunqiongyingyin-mac" >> "$GITHUB_OUTPUT"
+            echo "使用目录: kunqiongyingyin-mac"
+          else
+            echo "::error::未找到 package.json。仓库根目录内容："
+            ls -la
+            exit 1
+          fi
 
       - name: 使用 Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: npm
-          cache-dependency-path: 鲲穹影音源码/package-lock.json
+          cache-dependency-path: ${{ steps.appdir.outputs.dir }}/package-lock.json
 
       - name: 安装依赖
-        run: npm ci
+        working-directory: ${{ steps.appdir.outputs.dir }}
+        shell: bash
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            echo "::warning::未找到 package-lock.json，改用 npm install"
+            npm install
+          fi
 
       - name: 仅打包便携版（ZIP，通用 arm64+x64）
+        working-directory: ${{ steps.appdir.outputs.dir }}
         run: npm run build-mac-portable
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
@@ -35,5 +57,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: kunqiong-mac-portable-zip
-          path: 鲲穹影音源码/dist/*.zip
+          path: ${{ steps.appdir.outputs.dir }}/dist/*.zip
           if-no-files-found: error
