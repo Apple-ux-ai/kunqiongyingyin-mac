@@ -1,6 +1,5 @@
-# macOS 便携版 ZIP（GitHub Actions）
-# 说明：云端 runner 为 Apple Silicon，universal 会缺 darwin-x64 FFmpeg 导致失败；
-#       此处仅打 arm64 ZIP，适用于 M 系列 Mac；Intel Mac 需在本地或其它环境打 universal。
+# macOS 便携版 ZIP（GitHub Actions，arm64，未签名）
+# 云端为 Apple Silicon；产物适用于 M 系列 Mac。
 name: macOS 便携版 ZIP
 
 on:
@@ -14,72 +13,104 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v4
 
-      - name: 解析源码目录（含 package.json）
+      - name: 解析源码目录
         id: appdir
         shell: bash
         run: |
+          set -e
           if [ -f "鲲穹影音源码/package.json" ]; then
             echo "dir=鲲穹影音源码" >> "$GITHUB_OUTPUT"
-            echo "使用目录: 鲲穹影音源码"
           elif [ -f "kunqiongyingyin-mac/package.json" ]; then
             echo "dir=kunqiongyingyin-mac" >> "$GITHUB_OUTPUT"
-            echo "使用目录: kunqiongyingyin-mac"
           elif [ -f "package.json" ] && grep -q '"electron"' package.json 2>/dev/null; then
             echo "dir=." >> "$GITHUB_OUTPUT"
-            echo "使用目录: 仓库根目录"
           else
-            echo "::error::未找到 package.json。根目录："
+            echo "::error::未找到含 electron 的 package.json"
             ls -la
             exit 1
           fi
+
+      - name: 环境与目录诊断
+        shell: bash
+        run: |
+          set -e
+          echo "=== uname ===" && uname -a
+          echo "=== 根目录 ===" && ls -la
+          D="${{ steps.appdir.outputs.dir }}"
+          echo "=== 源码目录: $D ===" && ls -la "$D" | head -40
 
       - name: 使用 Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
-      - name: 确保 mac 图标（electron-builder 不接受过小占位图）
+      - name: 准备 mac 图标（PNG）
         working-directory: ${{ steps.appdir.outputs.dir }}
         shell: bash
         run: |
-          if [ -f kq-ai-v113-final.png ]; then
-            echo "已存在 kq-ai-v113-final.png"
-            exit 0
+          set -e
+          if [ ! -f kq-ai-v113-final.png ]; then
+            curl -fsSL -o kq-ai-v113-final.png "https://www.w3.org/Graphics/PNG/nurbcup2si.png"
+            echo "已下载占位 PNG"
           fi
-          for src in app-icon-final.png app-icon-new.png; do
-            if [ -f "$src" ]; then
-              cp "$src" kq-ai-v113-final.png
-              echo "已复制 $src -> kq-ai-v113-final.png"
-              exit 0
-            fi
-          done
-          echo "::error::缺少 kq-ai-v113-final.png，且未找到 app-icon-final.png / app-icon-new.png。请在项目根提交其一。"
-          ls -la *.png *.ico 2>/dev/null || ls -la
-          exit 1
+          ls -la kq-ai-v113-final.png
+
+      # package.json 里 fileAssociations 使用 .ico，在 mac 上 electron-builder 会找同名 .icns
+      - name: 由 PNG 生成 kq-ai-v113-final.icns
+        working-directory: ${{ steps.appdir.outputs.dir }}
+        shell: bash
+        run: |
+          set -e
+          SRC=kq-ai-v113-final.png
+          IK=kq.iconset
+          rm -rf "$IK"
+          mkdir "$IK"
+          sips -z 16 16     "$SRC" --out "$IK/icon_16x16.png"
+          sips -z 32 32     "$SRC" --out "$IK/icon_16x16@2x.png"
+          sips -z 32 32     "$SRC" --out "$IK/icon_32x32.png"
+          sips -z 64 64     "$SRC" --out "$IK/icon_32x32@2x.png"
+          sips -z 128 128   "$SRC" --out "$IK/icon_128x128.png"
+          sips -z 256 256   "$SRC" --out "$IK/icon_128x128@2x.png"
+          sips -z 256 256   "$SRC" --out "$IK/icon_256x256.png"
+          sips -z 512 512   "$SRC" --out "$IK/icon_256x256@2x.png"
+          sips -z 512 512   "$SRC" --out "$IK/icon_512x512.png"
+          sips -z 1024 1024 "$SRC" --out "$IK/icon_512x512@2x.png"
+          iconutil -c icns "$IK" -o kq-ai-v113-final.icns
+          ls -la kq-ai-v113-final.icns
+          rm -rf "$IK"
 
       - name: 安装依赖
         working-directory: ${{ steps.appdir.outputs.dir }}
         shell: bash
         run: |
+          set -e
           if [ -f package-lock.json ]; then
-            npm ci
+            npm ci --legacy-peer-deps
           else
-            echo "::warning::未找到 package-lock.json，改用 npm install"
-            npm install
+            npm install --legacy-peer-deps
           fi
 
-      - name: 打包 ZIP（arm64，未签名）
+      - name: 打包 ZIP（arm64）
         working-directory: ${{ steps.appdir.outputs.dir }}
         shell: bash
         run: |
+          set -e
           npx electron-builder --mac zip --arm64 \
-            -c.mac.identity=null \
+            -c.mac.forceCodeSigning=false \
             -c.mac.hardenedRuntime=false \
             '-c.mac.artifactName=${productName}-${version}-mac-arm64.${ext}'
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
 
+      - name: 列出 dist
+        if: success() || failure()
+        shell: bash
+        run: |
+          D="${{ steps.appdir.outputs.dir }}"
+          ls -la "$D/dist" 2>/dev/null || echo "无 dist 目录"
+
       - name: 上传 ZIP
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: kunqiong-mac-portable-arm64
