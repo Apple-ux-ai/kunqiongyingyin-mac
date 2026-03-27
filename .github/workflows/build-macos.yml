@@ -38,14 +38,24 @@ jobs:
         with:
           node-version: "20"
 
-      - name: 确保存在 mac 图标（未提交时占位）
+      - name: 确保 mac 图标（electron-builder 不接受过小占位图）
         working-directory: ${{ steps.appdir.outputs.dir }}
         shell: bash
         run: |
-          if [ ! -f kq-ai-v113-final.png ]; then
-            echo "::warning::缺少 kq-ai-v113-final.png，写入 1x1 占位图"
-            python3 -c "import base64,pathlib; pathlib.Path('kq-ai-v113-final.png').write_bytes(base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='))"
+          if [ -f kq-ai-v113-final.png ]; then
+            echo "已存在 kq-ai-v113-final.png"
+            exit 0
           fi
+          for src in app-icon-final.png app-icon-new.png; do
+            if [ -f "$src" ]; then
+              cp "$src" kq-ai-v113-final.png
+              echo "已复制 $src -> kq-ai-v113-final.png"
+              exit 0
+            fi
+          done
+          echo "::error::缺少 kq-ai-v113-final.png，且未找到 app-icon-final.png / app-icon-new.png。请在项目根提交其一。"
+          ls -la *.png *.ico 2>/dev/null || ls -la
+          exit 1
 
       - name: 安装依赖
         working-directory: ${{ steps.appdir.outputs.dir }}
