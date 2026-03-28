@@ -9,8 +9,8 @@ macOS 发布检查（需在 macOS 上执行构建与签名）
 2. 在本地 Mac 上构建
    npm run build-mac-release
 
-3. 在 Windows 上无法打出 macOS 便携版，请使用 .github/workflows/build-macos.yml：
-   推送到 GitHub → Actions → 手动运行「macOS 便携版 ZIP」→ 下载 Artifact（仅含 .zip）。
+3. GitHub Actions「macOS 便携版 ZIP」一次会跑两个任务：arm64（Apple Silicon）与 x64（Intel）。
+   Summary 底部有两个 Artifact：kunqiong-mac-arm64、kunqiong-mac-x64，请按自己的 Mac 芯片下载对应 zip。
 
 4. npm run build-mac-universal 与 build-mac-release 相同，均按 package.json 打出 dmg + zip + pkg
 

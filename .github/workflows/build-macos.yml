@@ -1,5 +1,5 @@
-# macOS 便携版 ZIP（GitHub Actions，arm64，未签名）
-# 云端为 Apple Silicon；产物适用于 M 系列 Mac。
+# macOS 便携版 ZIP ×2：arm64（Apple Silicon）与 x64（Intel）
+# 均在 macos-latest（ARM runner）上交叉打包；x64 任务会额外安装 darwin-x64 FFmpeg。
 name: macOS 便携版 ZIP
 
 on:
@@ -7,6 +7,11 @@ on:
 
 jobs:
   build:
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [arm64, x64]
+
     runs-on: macos-latest
 
     steps:
@@ -30,15 +35,6 @@ jobs:
             exit 1
           fi
 
-      - name: 环境与目录诊断
-        shell: bash
-        run: |
-          set -e
-          echo "=== uname ===" && uname -a
-          echo "=== 根目录 ===" && ls -la
-          D="${{ steps.appdir.outputs.dir }}"
-          echo "=== 源码目录: $D ===" && ls -la "$D" | head -40
-
       - name: 使用 Node.js
         uses: actions/setup-node@v4
         with:
@@ -51,11 +47,9 @@ jobs:
           set -e
           if [ ! -f kq-ai-v113-final.png ]; then
             curl -fsSL -o kq-ai-v113-final.png "https://www.w3.org/Graphics/PNG/nurbcup2si.png"
-            echo "已下载占位 PNG"
           fi
           ls -la kq-ai-v113-final.png
 
-      # package.json 里 fileAssociations 使用 .ico，在 mac 上 electron-builder 会找同名 .icns
       - name: 由 PNG 生成 kq-ai-v113-final.icns
         working-directory: ${{ steps.appdir.outputs.dir }}
         shell: bash
@@ -90,17 +84,27 @@ jobs:
             npm install --legacy-peer-deps
           fi
 
-      - name: 打包 ZIP（arm64）
+      # ARM runner 上 npm ci 不会安装 cpu=x64 的可选 FFmpeg，Intel 包打包前强制装入
+      - name: 安装 Intel 版 FFmpeg 二进制（仅 x64 矩阵）
+        if: matrix.arch == 'x64'
         working-directory: ${{ steps.appdir.outputs.dir }}
         shell: bash
         run: |
           set -e
-          npx electron-builder --mac zip --arm64 \
-            -c.mac.forceCodeSigning=false \
-            -c.mac.hardenedRuntime=false \
-            '-c.mac.artifactName=${productName}-${version}-mac-arm64.${ext}'
+          npm install --no-save @ffmpeg-installer/darwin-x64@4.1.0 @ffprobe-installer/darwin-x64@5.1.0
+
+      - name: 打包 ZIP
+        working-directory: ${{ steps.appdir.outputs.dir }}
+        shell: bash
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: |
+          set -e
+          ARCH="${{ matrix.arch }}"
+          npx electron-builder --mac zip --"$ARCH" \
+            -c.mac.forceCodeSigning=false \
+            -c.mac.hardenedRuntime=false \
+            "-c.mac.artifactName=\${productName}-\${version}-mac-${ARCH}.\${ext}"
 
       - name: 列出 dist
         if: success() || failure()
@@ -113,6 +117,6 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: kunqiong-mac-portable-arm64
+          name: kunqiong-mac-${{ matrix.arch }}
           path: ${{ steps.appdir.outputs.dir }}/dist/*.zip
           if-no-files-found: error
